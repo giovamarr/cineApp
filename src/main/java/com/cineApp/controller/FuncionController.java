@@ -22,7 +22,6 @@ public class FuncionController {
 	
 	@PostMapping(value = "/add")
 	public String addFuncion(@RequestBody  Funcion fun) {
-		System.out.print(fun);
 
 		repo.save(fun);
 		return "StatusCode: 200";
