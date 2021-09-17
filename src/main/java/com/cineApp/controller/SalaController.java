@@ -1,6 +1,9 @@
 package com.cineApp.controller;
 
+
+
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cineApp.model.Pelicula;
 import com.cineApp.model.Sala;
 import com.cineApp.repository.SalaRepository;
 
@@ -30,6 +34,13 @@ public class SalaController {
 		repo.save(sala);
 		return "StatusCode: 200";
 	}
+	
+	@GetMapping(value = "/all")
+	public List<Sala> getAllSalas() {
+		List<Sala> sal = repo.findAll();
+		return sal;
+	}
+
 	
 	@GetMapping(value = "/get/name/{name}")
 	public String getByNameSala(@PathVariable  String name) {

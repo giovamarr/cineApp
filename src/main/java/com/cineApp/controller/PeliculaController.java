@@ -1,6 +1,7 @@
 package com.cineApp.controller;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,24 +32,31 @@ public class PeliculaController {
 		return "StatusCode: 200";
 	}
 	
+	@GetMapping(value = "/all")
+	public List<Pelicula> getAllPelicula( ) {
+
+		List<Pelicula> pelis = repo.findAll();
+
+		return pelis;
+	}
 	
 	@GetMapping(value = "/get/name/{name}")
-	public String getByNamePelicula(@PathVariable  String name) {
+	public Pelicula getByNamePelicula(@PathVariable  String name) {
 		System.out.print(name);
 
 		Pelicula pel = repo.findByName(name);
 		System.out.print(pel);
 
-		return "StatusCode: 200";
+		return pel;
 	}
 	@GetMapping(value = "/get/id/{id}")
-	public String getByIdPelicula(@PathVariable  Integer id) {
+	public Optional getByIdPelicula(@PathVariable  Integer id) {
 		System.out.print(id);
 
 		Optional<Pelicula> pel = repo.findById(id);
 		System.out.print(pel);
 
-		return "StatusCode: 200";
+		return pel;
 	}
 
 }
