@@ -1,11 +1,14 @@
 package com.cineApp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cineApp.model.Pelicula;
 import com.cineApp.model.Reserva;
 import com.cineApp.repository.ReservaRepository;
 
@@ -17,10 +20,9 @@ public class ReservaController {
 	private ReservaRepository repo;
 	
 	@PostMapping(value = "/add")
-	public String addReserva(@RequestBody  Reserva res) {
-		System.out.print(res);
+	public ResponseEntity<?> addReserva(@RequestBody  Reserva res) {
 
-		repo.save(res);
-		return "StatusCode: 200";
+		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(res));
 	}
+	
 }

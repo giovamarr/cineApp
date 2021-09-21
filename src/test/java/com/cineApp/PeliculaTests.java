@@ -2,6 +2,8 @@ package com.cineApp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -41,7 +43,7 @@ public class PeliculaTests {
 	@Test
 	public void testFindPeliculaByName() {
 		String name = "Rapido y furiosos 9.";
-		Pelicula pel = repoPelicula.findByName(name);
+		Optional<Pelicula> pel = repoPelicula.findByName(name);
 		
 		assertThat(pel).isNotNull();		
 	}

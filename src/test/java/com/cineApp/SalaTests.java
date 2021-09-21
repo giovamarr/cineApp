@@ -2,6 +2,8 @@ package com.cineApp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -72,7 +74,7 @@ public class SalaTests {
 	@Test
 	public void testFindSalaName() {
 		String name = "Sala Secundaria";
-		Sala sala = repoSala.findByName(name);
+		Optional<Sala> sala = repoSala.findByName(name);
 		
 		assertThat(sala).isNotNull();		
 	}
