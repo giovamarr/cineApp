@@ -27,7 +27,6 @@ public class UserTests {
 	
 	@Autowired
 	private TestEntityManager entityManager;
-	
 @Test
 public void testCreateUser() {
 	User user = new User();
@@ -41,7 +40,6 @@ public void testCreateUser() {
 			
 	assertThat(existUser.getEmail()).isEqualTo(user.getEmail());
 		}
-	
 @Test
 public void testFindUserByEmail() {
 	String email = "dami@gmail.com";
@@ -49,6 +47,15 @@ public void testFindUserByEmail() {
 	
 	assertThat(user).isNotNull();		
 }
+@Test
+public void testFindUserByEmailandPass() {
+	String email = "dami@gmail.com";
+	String password = "123";
+	User user = repo.findByEmailAndPassword(email,password);
+	
+	assertThat(user).isNotNull();		
+}
+	
 	
 
 	
