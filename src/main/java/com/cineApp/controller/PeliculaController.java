@@ -1,7 +1,9 @@
 package com.cineApp.controller;
 
 import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,19 +81,25 @@ public class PeliculaController {
 					}
 		peli.get().setName(peliDetails.getName());
 		peli.get().setDescription(peliDetails.getDescription());
+		peli.get().setDuration(peliDetails.getDuration());
+		peli.get().setPoster(peliDetails.getPoster());
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(peli.get()));
 	}
 	
 	@DeleteMapping(value="/delete/{id}")
 	public ResponseEntity<?>  deletePelicula(@PathVariable Integer id) {
+		Optional<Pelicula> peli = repo.findById(id);
 		
-		if(!repo.findById(id).isPresent()) {
+		if(!peli.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
 		repo.deleteById(id);
 				
-		return ResponseEntity.ok().build();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("msg", "borrado Correctamente");
+
+        return new ResponseEntity<Object>(map,HttpStatus.OK);
 	}
 
 }

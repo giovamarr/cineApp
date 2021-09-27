@@ -29,7 +29,9 @@ public class PeliculaTests {
 	public void testCreatePelicula() {
 		Pelicula pel = new Pelicula();
 		pel.setName("Rapido y furiosos 9.");
-		pel.setDescription("Pelado mata a todos. ");
+		pel.setDescription("Pelado mata a todos.");
+		pel.setDuration(143);
+		pel.setPoster("/aIyqWTuf6NouKphVlxzbv9pblxQ.jpg");
 
 		
 		Pelicula newPelicula = repoPelicula.save(pel);
