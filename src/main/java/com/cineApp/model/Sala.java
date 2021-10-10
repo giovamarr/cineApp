@@ -77,16 +77,6 @@ public class Sala {
 	public void setFuncion(List<Funcion> funcion) {
 		this.funcion = funcion;
 	}
-
-	@Override
-	public String toString() {
-		return "Sala [id=" + id + ", name=" + name + ", state=" + state + ", funcion=" + funcion + ", butaca=" + butaca
-				+ "]";
-	}
-
-
-
-
 	
 	
 }
