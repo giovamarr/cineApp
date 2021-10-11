@@ -52,6 +52,6 @@ public class Butaca {
 	public void setState(boolean state) {
 		this.state = state;
 	}
-	
+
 	
 }

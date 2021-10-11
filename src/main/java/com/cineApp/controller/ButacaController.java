@@ -46,14 +46,7 @@ public class ButacaController {
 		return ResponseEntity.ok(butaca);
 	}
 	
-	@GetMapping(value = "/all")
-	public ResponseEntity<?> getAllButaca( ) {
 
-		List<Butaca> butacas = repo.findAll();
-
-		return ResponseEntity.ok(butacas);	
-		}
-	
 	@PutMapping(value="/update/{id}")
 	public ResponseEntity<?>  updateButaca(@RequestBody  Butaca details,@PathVariable Integer id) {
 

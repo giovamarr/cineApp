@@ -60,19 +60,10 @@ public class Sala {
 		this.state = state;
 	}
 
-
-	public List<Butaca> getButaca() {
-		return butaca;
-	}
-
 	public void setButaca(List<Butaca> butaca) {
 		this.butaca = butaca;
 	}
 	
-
-	public List<Funcion> getFuncion() {
-		return funcion;
-	}
 
 	public void setFuncion(List<Funcion> funcion) {
 		this.funcion = funcion;
