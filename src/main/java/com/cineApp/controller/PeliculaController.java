@@ -34,28 +34,30 @@ public class PeliculaController {
 	
 	@PostMapping(value = "/add")
 	public ResponseEntity<?> addPelicula(@RequestBody  Pelicula pel) {		
-		
+		Optional<Pelicula> pelicula = repo.findByName(pel.getName());
+		if(pelicula.isPresent()) {
+			return ResponseEntity.status(409).body("Ya existe una pelicula con ese nombre");
+			}
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(pel));
 	}
 	
-	
-	/*@GetMapping(value = "/get/name/{name}")
-	public ResponseEntity<?> getByNamePelicula(@PathVariable  String name) {
+	@GetMapping(value = "/byId/{id}")
+	public ResponseEntity<?>  getByIdPelicula(@PathVariable  Integer id) {
 
-		Optional<Pelicula> pel = repo.findByName(name);
+		Optional<Pelicula> pel = repo.findById(id);
 		
 		if(!pel.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
 
 		return ResponseEntity.ok(pel);
-	}*/
+	}
 	
-	@GetMapping(value = "/get/{id}")
-	public ResponseEntity<?>  getByIdPelicula(@PathVariable  Integer id) {
+	@GetMapping(value = "/byName/{name}")
+	public ResponseEntity<?>  getByNamePelicula(@PathVariable  String name) {
 
-		Optional<Pelicula> pel = repo.findById(id);
-		
+		Optional<Pelicula> pel = repo.findByName(name);
+		System.out.println(pel);
 		if(!pel.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
@@ -71,7 +73,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pelis);	
 		}
 	
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updatePelicula(@RequestBody  Pelicula peliDetails,@PathVariable Integer id) {
 
 		Optional<Pelicula> peli = repo.findById(id);
@@ -87,7 +89,7 @@ public class PeliculaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(peli.get()));
 	}
 	
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deletePelicula(@PathVariable Integer id) {
 		Optional<Pelicula> peli = repo.findById(id);
 		
