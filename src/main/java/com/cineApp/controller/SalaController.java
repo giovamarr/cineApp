@@ -25,7 +25,7 @@ import com.cineApp.repository.SalaRepository;
 
 
 @RestController
-@RequestMapping(value="/sala")
+@RequestMapping(value="/salas")
 @CrossOrigin
 public class SalaController {
 	
@@ -33,14 +33,14 @@ public class SalaController {
 	private SalaRepository repo;
 	
 	
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/")
 	public ResponseEntity<?> addSala(@RequestBody  Sala sala) {		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala));
 	}
 	
 	
-	@GetMapping(value = "/get/name/{name}")
+	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?> getByNameSala(@PathVariable  String name) {
 
 		Optional<Sala> pel = repo.findByName(name);
@@ -52,7 +52,7 @@ public class SalaController {
 		return ResponseEntity.ok(pel);
 	}
 	
-	@GetMapping(value = "/get/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdSala(@PathVariable  Integer id) {
 
 		Optional<Sala> sala = repo.findById(id);
@@ -64,7 +64,7 @@ public class SalaController {
 		return ResponseEntity.ok(sala);
 	}
 	
-	@GetMapping(value = "/all")
+	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllPelicula( ) {
 
 		List<Sala> salas = repo.findAll();
@@ -72,7 +72,7 @@ public class SalaController {
 		return ResponseEntity.ok(salas);	
 		}
 	
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updateSala(@RequestBody  Sala details,@PathVariable Integer id) {
 
 		Optional<Sala> sala = repo.findById(id);
@@ -86,7 +86,7 @@ public class SalaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala.get()));
 	}
 	
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteSala(@PathVariable Integer id) {
 		
 		if(!repo.findById(id).isPresent()) {

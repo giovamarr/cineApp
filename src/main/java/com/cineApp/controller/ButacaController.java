@@ -20,21 +20,21 @@ import com.cineApp.model.Butaca;
 import com.cineApp.repository.ButacaRepository;
 
 @RestController
-@RequestMapping(value="/butaca")
+@RequestMapping(value="/butacas")
 @CrossOrigin
 public class ButacaController {
 	
 	@Autowired
 	private ButacaRepository repo;
 	
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/")
 	public ResponseEntity<?> addButaca(@RequestBody  Butaca butaca) {		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca));
 	}
 	
 	
-	@GetMapping(value = "/get/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdButaca(@PathVariable  Integer id) {
 
 		Optional<Butaca> butaca = repo.findById(id);
@@ -47,7 +47,7 @@ public class ButacaController {
 	}
 	
 
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updateButaca(@RequestBody  Butaca details,@PathVariable Integer id) {
 
 		Optional<Butaca> butaca = repo.findById(id);
@@ -61,7 +61,7 @@ public class ButacaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca.get()));
 	}
 	
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteButaca(@PathVariable Integer id) {
 		
 		if(!repo.findById(id).isPresent()) {

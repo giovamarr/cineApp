@@ -14,14 +14,14 @@ import com.cineApp.model.Reserva;
 import com.cineApp.repository.ReservaRepository;
 
 @RestController
-@RequestMapping(value="/reserva")
+@RequestMapping(value="/reservas")
 @CrossOrigin
 public class ReservaController {
 	
 	@Autowired
 	private ReservaRepository repo;
 	
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/")
 	public ResponseEntity<?> addReserva(@RequestBody  Reserva res) {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(res));

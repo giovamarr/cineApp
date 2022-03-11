@@ -25,14 +25,14 @@ import com.cineApp.repository.PeliculaRepository;
 
 
 @RestController
-@RequestMapping(value="/pelicula")
+@RequestMapping(value="/peliculas")
 @CrossOrigin
 public class PeliculaController {
 	
 	@Autowired
 	private PeliculaRepository repo;
 	
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/")
 	public ResponseEntity<?> addPelicula(@RequestBody  Pelicula pel) {		
 		Optional<Pelicula> pelicula = repo.findByName(pel.getName());
 		if(pelicula.isPresent()) {
@@ -41,7 +41,7 @@ public class PeliculaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(pel));
 	}
 	
-	@GetMapping(value = "/byId/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdPelicula(@PathVariable  Integer id) {
 
 		Optional<Pelicula> pel = repo.findById(id);
@@ -53,7 +53,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pel);
 	}
 	
-	@GetMapping(value = "/byName/{name}")
+	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?>  getByNamePelicula(@PathVariable  String name) {
 
 		Optional<Pelicula> pel = repo.findByName(name);
@@ -65,7 +65,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pel);
 	}
 	
-	@GetMapping(value = "/all")
+	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllPelicula( ) {
 
 		List<Pelicula> pelis = repo.findAll();

@@ -21,21 +21,21 @@ import com.cineApp.model.Funcion;
 import com.cineApp.repository.FuncionRepository;
 
 @RestController
-@RequestMapping(value="/funcion")
+@RequestMapping(value="/funciones")
 @CrossOrigin
 public class FuncionController {
 	
 	@Autowired
 	private FuncionRepository repo;
 	
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/")
 	public ResponseEntity<?> addSFuncion(@RequestBody  Funcion funcion) {		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion));
 	}
 	
 	
-	@GetMapping(value = "/get/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
 
 		Optional<Funcion> funcion = repo.findById(id);
@@ -55,7 +55,7 @@ public class FuncionController {
 		return ResponseEntity.ok(funciones);	
 		}
 	
-	@PutMapping(value="/update/{id}")
+	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updateFuncion(@RequestBody  Funcion details,@PathVariable Integer id) {
 
 		Optional<Funcion> funcion = repo.findById(id);
@@ -69,7 +69,7 @@ public class FuncionController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion.get()));
 	}
 	
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteFuncion(@PathVariable Integer id) {
 		
 		if(!repo.findById(id).isPresent()) {
