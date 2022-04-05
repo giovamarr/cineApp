@@ -29,6 +29,29 @@ public class Sala {
 	
 	@Column(nullable = false)
 	private boolean state;
+
+
+	public Integer getNumber_row() {
+		return number_row;
+	}
+
+	public void setNumber_row(Integer number_row) {
+		this.number_row = number_row;
+	}
+
+	public Integer getNumber_column() {
+		return number_column;
+	}
+
+	public void setNumber_column(Integer number_column) {
+		this.number_column = number_column;
+	}
+
+	@Column()
+	private Integer number_row;
+	
+	@Column()
+	private Integer number_column;
 	
 	@OneToMany(mappedBy = "sala")
 	private List<Funcion> funcion;

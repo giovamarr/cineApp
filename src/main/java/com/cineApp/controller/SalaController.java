@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cineApp.model.Butaca;
 import com.cineApp.model.Sala;
+import com.cineApp.repository.ButacaRepository;
 import com.cineApp.repository.SalaRepository;
 
 
@@ -31,12 +33,26 @@ public class SalaController {
 	
 	@Autowired
 	private SalaRepository repo;
-	
+	@Autowired
+	private ButacaRepository butacaRepository;
 	
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addSala(@RequestBody  Sala sala) {		
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala));
+		Sala newsala = repo.save(sala);
+		for (int x=1; x<=sala.getNumber_row(); x++) 
+		{ 
+			for (int y=1; y<=sala.getNumber_column(); y++)
+			{ 
+				Butaca butaca = new Butaca();
+				butaca.setSala(sala);
+				butaca.setPosition_x(x);
+				butaca.setPosition_y(y);
+				butaca.setState(true);
+				System.out.print(butaca);
+				butacaRepository.save(butaca);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(newsala);
 	}
 	
 	
