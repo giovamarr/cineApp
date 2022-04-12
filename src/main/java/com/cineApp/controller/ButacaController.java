@@ -47,17 +47,16 @@ public class ButacaController {
 	}
 	
 
-	@PutMapping(value="/{id}")
-	public ResponseEntity<?>  updateButaca(@RequestBody  Butaca details,@PathVariable Integer id) {
+	@PutMapping(value="/")
+	public ResponseEntity<?>  updateButaca(@RequestBody  Butaca details) {
 
-		Optional<Butaca> butaca = repo.findById(id);
+		Optional<Butaca> butaca = repo.findById(details.getId());
 		
 		if(!butaca.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
 		
-		//faltan los otros atributos (ver peliculacontrolles)
-		
+		butaca.get().setState(details.isState());
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca.get()));
 	}
 	
