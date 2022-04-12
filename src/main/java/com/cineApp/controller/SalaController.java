@@ -48,7 +48,6 @@ public class SalaController {
 				butaca.setPosition_x(x);
 				butaca.setPosition_y(y);
 				butaca.setState(true);
-				System.out.print(butaca);
 				butacaRepository.save(butaca);
 			}
 		}
@@ -59,13 +58,14 @@ public class SalaController {
 	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?> getByNameSala(@PathVariable  String name) {
 
-		Optional<Sala> pel = repo.findByName(name);
+		Optional<Sala> sala = repo.findByName(name);
 		
-		if(!pel.isPresent()) {
+		if(!sala.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
+		
 
-		return ResponseEntity.ok(pel);
+		return ResponseEntity.ok(sala);
 	}
 	
 	@GetMapping(value = "/{id}")
@@ -88,19 +88,39 @@ public class SalaController {
 		return ResponseEntity.ok(salas);	
 		}
 	
-	@PutMapping(value="/{id}")
-	public ResponseEntity<?>  updateSala(@RequestBody  Sala details,@PathVariable Integer id) {
+	@PutMapping(value="/")
+	public ResponseEntity<?>  updateSala(@RequestBody  Sala details) {
 
-		Optional<Sala> sala = repo.findById(id);
+		Optional<Sala> sala = repo.findById(details.getId());
 		
 		if(!sala.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
 		sala.get().setName(details.getName());
-		//faltan los otros atributos
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala.get()));
 	}
+	
+	@PutMapping(value="/axis/{isrow}")
+	public ResponseEntity<?>  updateAxis(@RequestBody Sala details, @PathVariable  Integer isrow) {
+
+		Optional<Sala> sala = repo.findById(details.getId());
+		
+		if(!sala.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		if(isrow == 1){
+			butacaRepository.deleteByRow(sala.get().getId(),sala.get().getNumber_row());
+			sala.get().setNumber_row(sala.get().getNumber_row()-1); 
+		}
+		else {
+			butacaRepository.deleteByColumn(sala.get().getId(),sala.get().getNumber_column());
+			sala.get().setNumber_column(sala.get().getNumber_column()-1);
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala.get()));
+	}
+	
+	
 	
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteSala(@PathVariable Integer id) {

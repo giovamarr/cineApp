@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name="salas")
@@ -57,6 +59,7 @@ public class Sala {
 	private List<Funcion> funcion;
 	
 	@OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<Butaca> butaca;
 
 	public Integer getId() {
