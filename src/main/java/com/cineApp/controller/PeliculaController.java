@@ -32,6 +32,7 @@ public class PeliculaController {
 	@Autowired
 	private PeliculaRepository repo;
 	
+	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addPelicula(@RequestBody  Pelicula pel) {		
 		Optional<Pelicula> pelicula = repo.findByName(pel.getName());
@@ -41,6 +42,7 @@ public class PeliculaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(pel));
 	}
 	
+	/** Get One   **/
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdPelicula(@PathVariable  Integer id) {
 
@@ -53,6 +55,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pel);
 	}
 	
+	/** Get One by name  **/
 	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?>  getByNamePelicula(@PathVariable  String name) {
 
@@ -65,6 +68,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pel);
 	}
 	
+	/** Get All   **/
 	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllPelicula( ) {
 
@@ -73,6 +77,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pelis);	
 		}
 	
+	/** Update   **/
 	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updatePelicula(@RequestBody  Pelicula peliDetails,@PathVariable Integer id) {
 
@@ -89,6 +94,7 @@ public class PeliculaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(peli.get()));
 	}
 	
+	/** Delete   **/
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deletePelicula(@PathVariable Integer id) {
 		Optional<Pelicula> peli = repo.findById(id);

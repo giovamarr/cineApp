@@ -28,13 +28,14 @@ public class FuncionController {
 	@Autowired
 	private FuncionRepository repo;
 	
+	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addSFuncion(@RequestBody  Funcion funcion) {		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion));
 	}
 	
-	
+	/** Get One   **/
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
 
@@ -47,7 +48,8 @@ public class FuncionController {
 		return ResponseEntity.ok(funcion);
 	}
 	
-	@GetMapping(value = "/all")
+	/** Get All   **/
+	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllFunciones( ) {
 
 		List<Funcion> funciones = repo.findAll();
@@ -55,8 +57,9 @@ public class FuncionController {
 		return ResponseEntity.ok(funciones);	
 		}
 	
+	/** Update   **/
 	@PutMapping(value="/{id}")
-	public ResponseEntity<?>  updateFuncion(@RequestBody  Funcion details,@PathVariable Integer id) {
+	public ResponseEntity<?>  updateFuncion(@RequestBody  Funcion funcionDetails,@PathVariable Integer id) {
 
 		Optional<Funcion> funcion = repo.findById(id);
 		
@@ -64,11 +67,13 @@ public class FuncionController {
 			return ResponseEntity.notFound().build();
 					}
 		
-		//faltan los otros atributos
-		
+		funcion.get().setPelicula(funcionDetails.getPelicula());
+		funcion.get().setSala(funcionDetails.getSala());
+				
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion.get()));
 	}
 	
+	/** Delete   **/
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteFuncion(@PathVariable Integer id) {
 		
