@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cineApp.model.Butaca;
+import com.cineApp.model.Sala;
 import com.cineApp.repository.ButacaRepository;
+import com.cineApp.repository.SalaRepository;
+import com.cineApp.schema.ButacaSchema;
 
 @RestController
 @RequestMapping(value="/butacas")
@@ -26,9 +29,24 @@ public class ButacaController {
 	
 	@Autowired
 	private ButacaRepository repo;
+	@Autowired
+	private SalaRepository salaRepository;
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<?> addButaca(@RequestBody  Butaca butaca) {		
+	public ResponseEntity<?> addButaca(@RequestBody  ButacaSchema details) {		
+		Optional<Sala> sala = salaRepository.findById(details.sala_id);
+		
+		if((!sala.isPresent())) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Butaca butaca = new Butaca();
+		butaca.setSala(sala.get());
+		butaca.setPosition_x(details.butaca.getPosition_x());
+		butaca.setPosition_y(details.butaca.getPosition_y());
+		butaca.setState(details.butaca.isState());
+
+		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca));
 	}

@@ -67,6 +67,14 @@ public class Funcion {
 	public String toString() {
 		return "Funcion [id=" + id + ", pelicula=" + pelicula + ", sala=" + sala + "]";
 	}
-	
+
+	public LocalDate getFechaFuncion() {
+		return fechaFuncion;
+	}
+
+	public void setFechaFuncion(LocalDate fechaFuncion) {
+		this.fechaFuncion = fechaFuncion;
+	}
+
 	
 }

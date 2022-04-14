@@ -17,8 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cineApp.schema.FuncionSchema;
+
 import com.cineApp.model.Funcion;
+import com.cineApp.model.Pelicula;
+import com.cineApp.model.Sala;
 import com.cineApp.repository.FuncionRepository;
+import com.cineApp.repository.PeliculaRepository;
+import com.cineApp.repository.SalaRepository;
 
 @RestController
 @RequestMapping(value="/funciones")
@@ -27,13 +33,30 @@ public class FuncionController {
 	
 	@Autowired
 	private FuncionRepository repo;
+	@Autowired
+	private SalaRepository repoSala;
+	@Autowired
+	private PeliculaRepository repoPel;
+
 	
 	/** Add   **/
 	@PostMapping(value = "/")
-	public ResponseEntity<?> addSFuncion(@RequestBody  Funcion funcion) {		
+	public ResponseEntity<?> addFuncion(@RequestBody FuncionSchema details) {		
 		
+		Optional<Sala> sala = repoSala.findById(details.sala_id);
+		Optional<Pelicula> pel = repoPel.findById(details.pelicula_id);
+
+		if((!sala.isPresent()) || (!pel.isPresent())) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Funcion funcion = new Funcion();
+		funcion.setSala(sala.get());
+		funcion.setPelicula(pel.get());
+		funcion.setFechaFuncion(details.fechaFuncion);
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion));
-	}
+	} 
 	
 	/** Get One   **/
 	@GetMapping(value = "/{id}")
