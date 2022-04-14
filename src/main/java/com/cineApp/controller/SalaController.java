@@ -36,6 +36,8 @@ public class SalaController {
 	@Autowired
 	private ButacaRepository butacaRepository;
 	
+	
+	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addSala(@RequestBody  Sala sala) {		
 		Sala newsala = repo.save(sala);
@@ -54,7 +56,7 @@ public class SalaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(newsala);
 	}
 	
-	
+	/** Get One By Name   **/
 	@GetMapping(value = "/name/{name}")
 	public ResponseEntity<?> getByNameSala(@PathVariable  String name) {
 
@@ -68,6 +70,7 @@ public class SalaController {
 		return ResponseEntity.ok(sala);
 	}
 	
+	/** Get One   **/
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdSala(@PathVariable  Integer id) {
 
@@ -80,6 +83,7 @@ public class SalaController {
 		return ResponseEntity.ok(sala);
 	}
 	
+	/** Get All   **/
 	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllPelicula( ) {
 
@@ -88,6 +92,7 @@ public class SalaController {
 		return ResponseEntity.ok(salas);	
 		}
 	
+	/** Update   **/
 	@PutMapping(value="/")
 	public ResponseEntity<?>  updateSala(@RequestBody  Sala details) {
 
@@ -101,6 +106,7 @@ public class SalaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(sala.get()));
 	}
 	
+	/** Update   **/
 	@PutMapping(value="/axis/{isrow}")
 	public ResponseEntity<?>  updateAxis(@RequestBody Sala details, @PathVariable  Integer isrow) {
 
@@ -121,7 +127,7 @@ public class SalaController {
 	}
 	
 	
-	
+	/** Delete   **/
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteSala(@PathVariable Integer id) {
 		

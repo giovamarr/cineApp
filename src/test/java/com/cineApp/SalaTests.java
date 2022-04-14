@@ -27,7 +27,6 @@ public class SalaTests {
 	@Autowired
 	private ButacaRepository repoButa;
 
-	
 	@Autowired
 	private TestEntityManager entityManager;
 	

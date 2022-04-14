@@ -1,7 +1,6 @@
 package com.cineApp.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cineApp.model.Pelicula;
 import com.cineApp.model.User;
 import com.cineApp.repository.UserRepository;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @RestController
 @RequestMapping(value="/users")
