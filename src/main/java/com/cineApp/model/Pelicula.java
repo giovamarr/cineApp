@@ -25,14 +25,22 @@ public class Pelicula {
 	@Column(nullable = false , length = 64)
 	private String name;
 	
-	@Column( length = 300)
+	@Column( length = 2000)
 	private String description;
 	
 	@Column
 	private Integer duration;
 	
+	@Column
+	private String state;
 	
-	@Column( nullable = false , length = 100)
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	@Column( nullable = false , length = 500)
 	private String poster;
 	
 	

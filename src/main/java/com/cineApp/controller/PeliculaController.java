@@ -60,7 +60,6 @@ public class PeliculaController {
 	public ResponseEntity<?>  getByNamePelicula(@PathVariable  String name) {
 
 		Optional<Pelicula> pel = repo.findByName(name);
-		System.out.println(pel);
 		if(!pel.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
@@ -77,6 +76,14 @@ public class PeliculaController {
 		return ResponseEntity.ok(pelis);	
 		}
 	
+	/** Get All   **/
+	@GetMapping(value = "/all/{state}")
+	public ResponseEntity<?> getAllPelicula(@PathVariable  String state) {
+
+		List<Pelicula> pelis = repo.findAllByState(state);
+
+		return ResponseEntity.ok(pelis);	
+		}
 	/** Update   **/
 	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updatePelicula(@RequestBody  Pelicula peliDetails,@PathVariable Integer id) {
@@ -90,6 +97,7 @@ public class PeliculaController {
 		peli.get().setDescription(peliDetails.getDescription());
 		peli.get().setDuration(peliDetails.getDuration());
 		peli.get().setPoster(peliDetails.getPoster());
+		peli.get().setState(peliDetails.getState());
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(peli.get()));
 	}
