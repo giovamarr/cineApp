@@ -22,6 +22,7 @@ import com.cineApp.model.User;
 import com.cineApp.repository.FuncionRepository;
 import com.cineApp.repository.ReservaRepository;
 import com.cineApp.repository.UserRepository;
+import com.cineApp.schema.ListaVentaPeliculas;
 import com.cineApp.schema.ReservaSchema;
 
 @RestController
@@ -109,6 +110,19 @@ public class ReservaController {
 		return ResponseEntity.ok().build();
 	}
 	
-
+	/** Listado ventas por pelicula   **/
+	@GetMapping(value = "/listados/pelicula")
+	public ResponseEntity<?>  getListadoVentasPelicula() {
+		List<Object[]> listado = reservaRepository.listadoVentasPelicula();
+		return ResponseEntity.ok(listado);
+	}
+	
+	/** Listado ventas por pelicula   **/
+	@GetMapping(value = "/listados/funcion")
+	public ResponseEntity<?>  getListadoVentasFuncion() {
+		List<Object[]> listado = reservaRepository.listadoVentasFuncion();
+		return ResponseEntity.ok(listado);
+	}
+	
 	
 }

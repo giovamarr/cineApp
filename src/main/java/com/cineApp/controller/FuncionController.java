@@ -1,6 +1,7 @@
 package com.cineApp.controller;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ import com.cineApp.repository.SalaRepository;
 public class FuncionController {
 	
 	@Autowired
-	private FuncionRepository repo;
+	private FuncionRepository funcionRepository;
 	@Autowired
 	private SalaRepository repoSala;
 	@Autowired
@@ -54,29 +55,60 @@ public class FuncionController {
 		funcion.setSala(sala.get());
 		funcion.setPelicula(pelicula.get());
 		funcion.setFechaFuncion(details.fechaFuncion);
+		funcion.setHoraFuncion(details.horaFuncion);
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion));
+		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion));
 	} 
 	
-	/** Get One   **/
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
+//	/** Get One   **/
+//	@GetMapping(value = "/{id}")
+//	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
+//
+//		Optional<Pelicula> pelicula = repoPel.findById(id);
+//		
+//		if(!pelicula.isPresent()) {
+//			return ResponseEntity.notFound().build();
+//		}
+//		
+//		List<Funcion> funciones = funcionRepository.findById(id);
+//
+//		return ResponseEntity.ok(funciones);
+//	}
+	
+	/** Get Dates by Movie Id   **/
+	@GetMapping(value = "/byMovie/{id}")
+	public ResponseEntity<?>  getByIdMovie(@PathVariable  Integer id) {
 
-		Optional<Funcion> funcion = repo.findById(id);
+		List<LocalDate> fechasFunciones= funcionRepository.findByMovieId(id);
 		
-		if(!funcion.isPresent()) {
-			return ResponseEntity.notFound().build();
-					}
+//		Sin la validacion manejo mejor en los dropdown list dinamicos de react
+//		if (fechasFunciones == null || fechasFunciones.isEmpty()) {
+//			return ResponseEntity.ok("No hay fecha disponible");
+//		}
+		
+		return ResponseEntity.ok(fechasFunciones);
+	}
+	
+	/** Get Dates by Movie Id   **/
+	@GetMapping(value = "/byMovie/{id}/{fechaFuncion}")
+	public ResponseEntity<?>  getByIdMovie(@PathVariable  Integer id, @PathVariable String fechaFuncion) {
 
-		return ResponseEntity.ok(funcion);
+		LocalDate localDate = LocalDate.parse(fechaFuncion);
+		List<Funcion> funciones= funcionRepository.findByMovieIdAndDate(id, localDate);
+		
+//		Sin la validacion manejo mejor en los dropdown list dinamicos de react
+//		if (fechasFunciones == null || fechasFunciones.isEmpty()) {
+//			return ResponseEntity.ok("No hay fecha disponible");
+//		}
+		return ResponseEntity.ok(funciones);
 	}
 	
 	/** Get All   **/
 	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllFunciones( ) {
 
-		List<Funcion> funciones = repo.findAll();
-
+		List<Funcion> funciones = funcionRepository.findAll();
+		
 		return ResponseEntity.ok(funciones);	
 		}
 	
@@ -84,7 +116,7 @@ public class FuncionController {
 	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updateFuncion(@RequestBody FuncionSchema details,@PathVariable Integer id) {
 
-		Optional<Funcion> funcion = repo.findById(id);
+		Optional<Funcion> funcion = funcionRepository.findById(id);
 		Optional<Sala> sala = repoSala.findById(details.sala_id);
 		Optional<Pelicula> pelicula = repoPel.findById(details.pelicula_id);
 
@@ -95,17 +127,17 @@ public class FuncionController {
 		funcion.get().setPelicula(pelicula.get());
 		funcion.get().setSala(sala.get());
 		funcion.get().setFechaFuncion(details.fechaFuncion);
-		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(funcion.get()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion.get()));
 	}
 	
 	/** Delete   **/
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteFuncion(@PathVariable Integer id) {
 		
-		if(!repo.findById(id).isPresent()) {
+		if(!funcionRepository.findById(id).isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
-		repo.deleteById(id);
+		funcionRepository.deleteById(id);
 				
 		return ResponseEntity.ok().build();
 	}

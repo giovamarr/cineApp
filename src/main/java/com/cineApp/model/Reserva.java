@@ -22,13 +22,17 @@ public class Reserva {
 	@JoinColumn(name = "funcion_id")
 	private Funcion funcion;
 	
-	@Column(nullable = true)
-	private Timestamp fechaCompra;
-	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-
+	
+	@ManyToOne
+	@JoinColumn(name = "butaca_id")
+	private Butaca butaca;
+	
+	@Column()
+	private Timestamp fechaCompra;
+	
 	public Integer getId() {
 		return id;
 	}

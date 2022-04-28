@@ -1,6 +1,7 @@
 package com.cineApp.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -29,6 +30,14 @@ public class Funcion {
 	@JoinColumn(name = "pelicula_id")
 	private Pelicula pelicula;
 	
+	public LocalTime getHoraFuncion() {
+		return horaFuncion;
+	}
+
+	public void setHoraFuncion(LocalTime horaFuncion) {
+		this.horaFuncion = horaFuncion;
+	}
+
 	@OneToMany(mappedBy = "funcion")
 	private List<Reserva> Reserva;
 	
@@ -36,8 +45,11 @@ public class Funcion {
 	@JoinColumn(name = "sala_id")
 	private Sala sala;
 	
-	@Column(nullable = true ,name = "fecha_funcion")
+	@Column(nullable = false ,name = "fecha_funcion")
 	private LocalDate fechaFuncion;
+	
+	@Column(nullable = false ,name = "hora_funcion")
+	private LocalTime horaFuncion;
 
 	public Integer getId() {
 		return id;

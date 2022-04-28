@@ -1,5 +1,6 @@
 package com.cineApp.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,13 @@ public class ButacaController {
 					}
 
 		return ResponseEntity.ok(butaca);
+	}
+	@GetMapping(value = "/byFuncion/{id}")
+	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
+
+		List<Butaca> butacas = repo.findByFuncionId(id);
+
+		return ResponseEntity.ok(butacas);
 	}
 	
 

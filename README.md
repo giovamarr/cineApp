@@ -15,7 +15,8 @@ Para regularizar los items necesarios son:
 3. Realizar devolución de entradas en caso de que el cliente lo requiera
 4. Listado de ventas por película
 5. Listado de cantidad de entradas por función
-Para aprobación directa:
+
+Extra:
 1. Cancelacion o devolucion la venta de la entrada devuelta
 2. Realizar mantenimiento de una sala, por lo que se deberá reprogramar y cancelar
 funciones
