@@ -28,8 +28,8 @@ import com.cineApp.repository.UserRepository;
 @Rollback(false)
 public class ReservaTests {
 	
-	@Autowired
-	private UserRepository repoUser;
+//	@Autowired
+//	private UserRepository repoUser;
 	
 	@Autowired
 	private ReservaRepository repoReserva;
@@ -92,13 +92,13 @@ public class ReservaTests {
 		
 		repoFuncion.save(fun);
 		
-		String email = "gio@gmail.com";
-		User user = repoUser.findByEmail(email);
+//		String email = "gio@gmail.com";
+//		User user = repoUser.findByEmail(email);
 		
 		
 		Reserva res = new Reserva();
 		res.setFuncion(fun);
-		res.setUser(user);
+//		res.setUser(user);
 
 		Reserva newRes = repoReserva.save(res);
 		Reserva existRes = entityManager.find(Reserva.class, newRes.getId());

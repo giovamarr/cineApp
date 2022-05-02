@@ -1,6 +1,6 @@
 package com.cineApp.model;
 
-import java.sql.Timestamp;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="reservas")
@@ -22,17 +23,26 @@ public class Reserva {
 	@JoinColumn(name = "funcion_id")
 	private Funcion funcion;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
-	
+//	@ManyToOne
+//	@JoinColumn(name = "user_id")
+//	private User user;
+	@Column(nullable = false, unique = true, length = 50)
+	private String code;
+
 	@ManyToOne
 	@JoinColumn(name = "butaca_id")
 	private Butaca butaca;
 	
 	@Column()
-	private Timestamp fechaCompra;
+	private LocalDate fechaCompra;
 	
+	public String getCode() {
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -48,22 +58,30 @@ public class Reserva {
 	public void setFuncion(Funcion funcion) {
 		this.funcion = funcion;
 	}
+	public Butaca getButaca() {
+		return butaca;
+	}
 
-	public Timestamp getFechaCompra() {
+	public void setButaca(Butaca butaca) {
+		this.butaca = butaca;
+	}
+
+
+	public LocalDate getFechaCompra() {
 		return fechaCompra;
 	}
 
-	public void setFechaCompra(Timestamp fechaCompra) {
+	public void setFechaCompra(LocalDate fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
 
-	public User getUser() {
-		return user;
-	}
+//	public User getUser() {
+//		return user;
+//	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 
 	
 	

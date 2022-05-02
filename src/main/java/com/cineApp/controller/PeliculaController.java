@@ -76,7 +76,7 @@ public class PeliculaController {
 		return ResponseEntity.ok(pelis);	
 		}
 	
-	/** Get All   **/
+	/** Get All  by state**/
 	@GetMapping(value = "/all/{state}")
 	public ResponseEntity<?> getAllPelicula(@PathVariable  String state) {
 
@@ -84,6 +84,16 @@ public class PeliculaController {
 
 		return ResponseEntity.ok(pelis);	
 		}
+	/** Get All  by state**/
+	@GetMapping(value = "/available")
+	public ResponseEntity<?> getAllPeliculaAvailable() {
+
+		List<Pelicula> pelis = repo.findAllByState();
+
+		return ResponseEntity.ok(pelis);	
+		}
+
+	
 	/** Update   **/
 	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updatePelicula(@RequestBody  Pelicula peliDetails,@PathVariable Integer id) {

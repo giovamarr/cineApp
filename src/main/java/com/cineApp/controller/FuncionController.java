@@ -127,6 +127,7 @@ public class FuncionController {
 		funcion.get().setPelicula(pelicula.get());
 		funcion.get().setSala(sala.get());
 		funcion.get().setFechaFuncion(details.fechaFuncion);
+		funcion.get().setHoraFuncion(details.horaFuncion);
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion.get()));
 	}
 	

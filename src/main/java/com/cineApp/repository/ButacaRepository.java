@@ -26,6 +26,6 @@ public interface ButacaRepository extends JpaRepository< Butaca, Integer> {
 	@Query("DELETE FROM Butaca but WHERE but.sala.id=?1 and but.position_y=?2")
 	void deleteByColumn(Integer idSala, Integer position_y);
 	
-	@Query("SELECT but from Reserva res join res.funcion fun join fun.sala sal join sal.butaca but where but.state = 1 and fun.id = ?1")
+	@Query("SELECT b FROM Funcion f join f.sala s join s.butaca b where f.id=?1 and b.state=1 and b.id not in ( SELECT res.butaca.id from Reserva res join res.funcion fun )")
 	List<Butaca> findByFuncionId(Integer funcionId);
 }

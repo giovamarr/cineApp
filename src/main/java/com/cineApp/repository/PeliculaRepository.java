@@ -15,4 +15,7 @@ public interface PeliculaRepository extends JpaRepository<Pelicula, Integer> {
 	@Query("SELECT pel from Pelicula pel where pel.state = ?1")
 	List<Pelicula> findAllByState(String state);
 	
+	@Query("SELECT distinct pel from Funcion fun join fun.pelicula pel where pel.state = 'cartelera'")
+	List<Pelicula> findAllByState();
+	
 }

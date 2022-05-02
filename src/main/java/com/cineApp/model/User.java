@@ -28,8 +28,8 @@ public class User {
 	@Column(nullable = false)
 	private boolean admin;
 	
-	@OneToMany(mappedBy = "user")
-	private List<Reserva> reserva;
+//	@OneToMany(mappedBy = "user")
+//	private List<Reserva> reserva;
 	
 	public Long getId() {
 		return id;

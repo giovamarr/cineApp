@@ -1,5 +1,6 @@
 package com.cineApp.controller;
-
+import java.util.UUID;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cineApp.model.Funcion;
 import com.cineApp.model.Reserva;
 import com.cineApp.model.User;
+import com.cineApp.model.Butaca;
 import com.cineApp.repository.FuncionRepository;
 import com.cineApp.repository.ReservaRepository;
 import com.cineApp.repository.UserRepository;
+import com.cineApp.repository.ButacaRepository;
 import com.cineApp.schema.ListaVentaPeliculas;
 import com.cineApp.schema.ReservaSchema;
 
@@ -36,23 +39,26 @@ public class ReservaController {
 	private FuncionRepository funcionRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ButacaRepository butacaRepository;
 	
 	
 	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addReserva(@RequestBody ReservaSchema details) {		
 		
-		Optional<User> user = userRepository.findById(details.user_id);
 		Optional<Funcion> funcion = funcionRepository.findById(details.funcion_id);
+		Optional<Butaca> butaca = butacaRepository.findById(details.butaca_id);
 
-		if((!user.isPresent()) || (!funcion.isPresent())) {
+		if(!funcion.isPresent()||!butaca.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
 		Reserva reserva = new Reserva();
-		reserva.setUser(user.get());
+		reserva.setCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		reserva.setFuncion(funcion.get());
-		reserva.setFechaCompra(details.fechaCompra);
+		reserva.setButaca(butaca.get());
+		reserva.setFechaCompra(java.time.LocalDate.now());
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva));
 	} 
@@ -85,16 +91,14 @@ public class ReservaController {
 	public ResponseEntity<?>  updateFuncion(@RequestBody ReservaSchema details,@PathVariable Integer id) {
 
 		Optional<Reserva> reserva = reservaRepository.findById(id);
-		Optional<User> user = userRepository.findById(details.user_id);
 		Optional<Funcion> funcion = funcionRepository.findById(details.funcion_id);
 
-		if((!reserva.isPresent()) || (!user.isPresent()) || (!funcion.isPresent())) {
+		if((!reserva.isPresent()) ||  (!funcion.isPresent())) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		reserva.get().setUser(user.get());
 		reserva.get().setFuncion(funcion.get());
-		reserva.get().setFechaCompra(details.fechaCompra);
+		reserva.get().setFechaCompra(java.time.LocalDate.now());
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva.get()));
 	}
 	
