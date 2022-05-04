@@ -1,7 +1,9 @@
 package com.cineApp.controller;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +25,13 @@ import com.cineApp.model.User;
 import com.cineApp.model.Butaca;
 import com.cineApp.repository.FuncionRepository;
 import com.cineApp.repository.ReservaRepository;
+import com.cineApp.repository.TarjetaRepository;
 import com.cineApp.repository.UserRepository;
 import com.cineApp.repository.ButacaRepository;
 import com.cineApp.schema.ListaVentaPeliculas;
 import com.cineApp.schema.ReservaSchema;
+import com.cineApp.service.EmailSenderService;
+import com.cineApp.service.PaymentService;
 
 @RestController
 @RequestMapping(value="/reservas")
@@ -38,9 +43,11 @@ public class ReservaController {
 	@Autowired
 	private FuncionRepository funcionRepository;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private ButacaRepository butacaRepository;
+	@Autowired
+	private EmailSenderService emailSenderService;
+	@Autowired
+	private PaymentService paymentService;
 	
 	
 	/** Add   **/
@@ -49,16 +56,24 @@ public class ReservaController {
 		
 		Optional<Funcion> funcion = funcionRepository.findById(details.funcion_id);
 		Optional<Butaca> butaca = butacaRepository.findById(details.butaca_id);
+		if(paymentService.searchCreditCard(details.number, details.cvc, details.name, details.expiry)) {
+			Map<String,Object> msg= new HashMap<String, Object>();
+			msg.put("paymentMsg", "Datos de pago no encontrados.");
+			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(msg);
+		}
 
 		if(!funcion.isPresent()||!butaca.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
+
 		
 		Reserva reserva = new Reserva();
 		reserva.setCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		reserva.setFuncion(funcion.get());
 		reserva.setButaca(butaca.get());
 		reserva.setFechaCompra(java.time.LocalDate.now());
+		
+		emailSenderService.sendEmailNewReservation(details.email,reserva);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva));
 	} 

@@ -22,10 +22,48 @@ public class Tarjeta {
 	private Integer id;
 	
 	@Column(length = 25)
-	private String company;
+	private String numberCard;
 	
-	@Column
-	private LocalDate expiration;
+	@Column(length = 10)
+	private String expiry;
+	
+	@Column(length = 10)
+	private String cvc;
+	
+	@Column(length = 50)
+	private String owner;
+
+	public String getNumberCard() {
+		return numberCard;
+	}
+
+	public void setNumberCard(String numberCard) {
+		this.numberCard = numberCard;
+	}
+
+	public String getExpiry() {
+		return expiry;
+	}
+
+	public void setExpiry(String expiry) {
+		this.expiry = expiry;
+	}
+
+	public String getCvc() {
+		return cvc;
+	}
+
+	public void setCvc(String cvc) {
+		this.cvc = cvc;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 
 	public Integer getId() {
 		return id;
@@ -35,21 +73,7 @@ public class Tarjeta {
 		this.id = id;
 	}
 
-	public String getCompany() {
-		return company;
-	}
 
-	public void setCompany(String company) {
-		this.company = company;
-	}
-
-	public LocalDate getExpiration() {
-		return expiration;
-	}
-
-	public void setExpiration(LocalDate expiration) {
-		this.expiration = expiration;
-	}
 	
 	
 }
