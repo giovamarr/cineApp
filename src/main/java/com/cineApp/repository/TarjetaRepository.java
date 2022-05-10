@@ -11,7 +11,7 @@ import com.cineApp.model.User;
 
 @Repository
 public interface TarjetaRepository extends JpaRepository<Tarjeta, Long> {
-	@Query("SELECT t from Tarjeta t where t.numberCard=?1 and t.cvc=?2 and t.owner=?3 and t.expiry=?4")
+	@Query("SELECT t from Tarjeta t where t.number_card=?1 and t.cvc=?2 and t.owner=?3 and t.expiry=?4")
 	Optional<Tarjeta> findCreditCardBydata(String numberCard, String cvc, String owner, String expiry);
 	
 	

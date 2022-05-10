@@ -22,7 +22,7 @@ public class Tarjeta {
 	private Integer id;
 	
 	@Column(length = 25)
-	private String numberCard;
+	private String number_card;
 	
 	@Column(length = 10)
 	private String expiry;
@@ -34,11 +34,11 @@ public class Tarjeta {
 	private String owner;
 
 	public String getNumberCard() {
-		return numberCard;
+		return number_card;
 	}
 
 	public void setNumberCard(String numberCard) {
-		this.numberCard = numberCard;
+		this.number_card = numberCard;
 	}
 
 	public String getExpiry() {

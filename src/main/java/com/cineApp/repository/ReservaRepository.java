@@ -1,6 +1,7 @@
 package com.cineApp.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,7 +18,15 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 	@Query("SELECT fun.pelicula.name, count(res) from Reserva res JOIN res.funcion fun group by fun.pelicula")
 	List<Object[]> listadoVentasPelicula();
 	
-	@Query("SELECT fun.id,fun.fechaFuncion, fun.horaFuncion, count(res) from Reserva res JOIN res.funcion fun group by fun")
+	@Query("SELECT fun.id,fun.pelicula.name,fun.sala.name,fun.fechaFuncion, fun.horaFuncion, count(res) from Reserva res JOIN res.funcion fun group by fun")
 	List<Object[]> listadoVentasFuncion();
+	
+	@Query("SELECT res from Reserva res where res.code=?1 and res.email=?2")
+	Optional<Reserva> getReservabyCodeandEmail(String code, String email);
+	
+	@Transactional
+	@Modifying
+	@Query("delete from Reserva res where res.code=?1 and res.email=?2")
+	void deleteReserva(String code,String email);
 	
 }

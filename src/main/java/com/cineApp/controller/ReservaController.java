@@ -28,6 +28,7 @@ import com.cineApp.repository.ReservaRepository;
 import com.cineApp.repository.TarjetaRepository;
 import com.cineApp.repository.UserRepository;
 import com.cineApp.repository.ButacaRepository;
+import com.cineApp.schema.CancelReservaSchema;
 import com.cineApp.schema.ListaVentaPeliculas;
 import com.cineApp.schema.ReservaSchema;
 import com.cineApp.service.EmailSenderService;
@@ -56,7 +57,7 @@ public class ReservaController {
 		
 		Optional<Funcion> funcion = funcionRepository.findById(details.funcion_id);
 		Optional<Butaca> butaca = butacaRepository.findById(details.butaca_id);
-		if(paymentService.searchCreditCard(details.number, details.cvc, details.name, details.expiry)) {
+		if(!paymentService.searchCreditCard(details.number, details.cvc, details.name, details.expiry)) {
 			Map<String,Object> msg= new HashMap<String, Object>();
 			msg.put("paymentMsg", "Datos de pago no encontrados.");
 			return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(msg);
@@ -71,12 +72,15 @@ public class ReservaController {
 		reserva.setCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		reserva.setFuncion(funcion.get());
 		reserva.setButaca(butaca.get());
+		reserva.setEmail(details.email);
 		reserva.setFechaCompra(java.time.LocalDate.now());
 		
 		emailSenderService.sendEmailNewReservation(details.email,reserva);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva));
 	} 
+	
+
 	
 	/** Get One   **/
 	@GetMapping(value = "/{id}")
@@ -117,8 +121,24 @@ public class ReservaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva.get()));
 	}
 	
+	
 	/** Delete   **/
-	@DeleteMapping(value="/{id}")
+	@DeleteMapping(value = "/")
+	public ResponseEntity<?> deleteReserva(@RequestBody CancelReservaSchema details) {		
+		
+		Optional<Reserva> reserva = reservaRepository.getReservabyCodeandEmail(details.code,details.email);
+		if(!reserva.isPresent()) {
+			Map<String,Object> msg= new HashMap<String, Object>();
+			msg.put("message", "Entrada no encontrada");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
+		}		
+		reservaRepository.deleteReserva(details.code,details.email);		
+		Map<String,Object> msg= new HashMap<String, Object>();
+		msg.put("message", "Entrada borrada con exito");
+		return ResponseEntity.status(HttpStatus.OK).body(msg);
+	} 
+	
+/*	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteReserva(@PathVariable Integer id) {
 		
 		if(!reservaRepository.findById(id).isPresent()) {
@@ -127,7 +147,7 @@ public class ReservaController {
 		reservaRepository.deleteById(id);
 				
 		return ResponseEntity.ok().build();
-	}
+	}*/
 	
 	/** Listado ventas por pelicula   **/
 	@GetMapping(value = "/listados/pelicula")

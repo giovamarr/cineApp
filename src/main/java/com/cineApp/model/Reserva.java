@@ -29,6 +29,17 @@ public class Reserva {
 	@Column(nullable = false, unique = true, length = 50)
 	private String code;
 
+	@Column(nullable = false,  length = 150)
+	private String email;
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "butaca_id")
 	private Butaca butaca;
