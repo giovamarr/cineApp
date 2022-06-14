@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cineApp.schema.FuncionSchema;
-
+import com.cineApp.service.EmailSenderService;
 import com.cineApp.model.Funcion;
 import com.cineApp.model.Pelicula;
 import com.cineApp.model.Sala;
@@ -38,6 +38,8 @@ public class FuncionController {
 	private SalaRepository repoSala;
 	@Autowired
 	private PeliculaRepository repoPel;
+	@Autowired
+	private EmailSenderService emailSenderService;
 
 	
 	/** Add   **/
@@ -56,24 +58,22 @@ public class FuncionController {
 		funcion.setPelicula(pelicula.get());
 		funcion.setFechaFuncion(details.fechaFuncion);
 		funcion.setHoraFuncion(details.horaFuncion);
+		
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion));
 	} 
 	
 //	/** Get One   **/
-//	@GetMapping(value = "/{id}")
-//	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
-//
-//		Optional<Pelicula> pelicula = repoPel.findById(id);
-//		
-//		if(!pelicula.isPresent()) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		
-//		List<Funcion> funciones = funcionRepository.findById(id);
-//
-//		return ResponseEntity.ok(funciones);
-//	}
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
+		
+		Optional<Funcion> funcion = funcionRepository.findById(id);
+		if(!funcion.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}		
+
+		return ResponseEntity.ok(funcion);
+	}
 	
 	/** Get Dates by Movie Id   **/
 	@GetMapping(value = "/byMovie/{id}")
@@ -127,7 +127,10 @@ public class FuncionController {
 		funcion.get().setPelicula(pelicula.get());
 		funcion.get().setSala(sala.get());
 		funcion.get().setFechaFuncion(details.fechaFuncion);
-		funcion.get().setHoraFuncion(details.horaFuncion);
+		funcion.get().setHoraFuncion(details.horaFuncion);		
+		
+		emailSenderService.sendDataModifiedFunction(id);
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion.get()));
 	}
 	
@@ -139,7 +142,9 @@ public class FuncionController {
 			return ResponseEntity.notFound().build();
 					}
 		funcionRepository.deleteById(id);
-				
+		
+		emailSenderService.sendCancelFunction(id);
+						
 		return ResponseEntity.ok().build();
 	}
 }
