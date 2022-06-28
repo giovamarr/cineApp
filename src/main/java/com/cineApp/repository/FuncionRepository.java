@@ -13,14 +13,16 @@ import com.cineApp.model.Funcion;
 
 
 public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
-	@Transactional
-	@Modifying
-	@Query("SELECT fun.fechaFuncion from Funcion fun where fun.pelicula.id = ?1 and fun.fechaFuncion >= DATE(NOW())")
+	@Query("SELECT distinct fun.fechaFuncion from Funcion fun where fun.pelicula.id = ?1 and fun.fechaFuncion >= DATE(NOW())")
 	List<LocalDate> findByMovieId(Integer pelicula_id);
 	
-	@Transactional
-	@Modifying
 	@Query("SELECT fun from Funcion fun where fun.pelicula.id = ?1 and fun.fechaFuncion = ?2 and fun.fechaFuncion >= DATE(NOW())")
 	List<Funcion> findByMovieIdAndDate(Integer pelicula_id, LocalDate fechaFuncion);
+	
+	@Query("SELECT fun from Funcion fun where fun.fechaFuncion=?1 and fun.sala.id=?2")
+	List<Funcion> findByDateAndSala(LocalDate fechaFuncion, int sala_id);
+	
+	@Query("SELECT fun from Funcion fun where fun.fechaFuncion >= DATE(NOW())")
+	List<Funcion> findAllAfterToday();
 
 }

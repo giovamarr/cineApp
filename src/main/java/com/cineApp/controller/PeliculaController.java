@@ -1,6 +1,7 @@
 package com.cineApp.controller;
 
 import java.util.Optional;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class PeliculaController {
 		if(pelicula.isPresent()) {
 			return ResponseEntity.status(409).body("Ya existe una pelicula con ese nombre");
 			}
+		if(pel.getDuration() <= 0) {
+			return ResponseEntity.badRequest().body("La duracion debe ser mayor a 0");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(pel));
 	}
 	

@@ -2,6 +2,7 @@ package com.cineApp.controller;
 
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,10 +49,32 @@ public class FuncionController {
 		
 		Optional<Sala> sala = repoSala.findById(details.sala_id);
 		Optional<Pelicula> pelicula = repoPel.findById(details.pelicula_id);
-
+		List<Funcion> funciones = funcionRepository.findByDateAndSala(details.fechaFuncion, details.sala_id);
+				
 		if((!sala.isPresent()) || (!pelicula.isPresent())) {
 			return ResponseEntity.notFound().build();
 		}
+		if(details.fechaFuncion.compareTo(LocalDate.now()) < 0) {
+			return ResponseEntity.badRequest().body("La fecha debe ser mayor o igual a hoy");
+		}
+		LocalTime hora_inicio_pelicula_nueva = details.horaFuncion;
+		LocalTime hora_fin_pelicula_nueva = hora_inicio_pelicula_nueva.plusMinutes(pelicula.get().getDuration());
+		
+		//Valido que no haya una funcion en ese horario
+		for (Funcion fun: funciones) {
+			LocalTime hora_inicio_pelicula_existente = fun.getHoraFuncion();
+			LocalTime hora_fin_pelicula_existente = hora_inicio_pelicula_existente.plusMinutes(fun.getPelicula().getDuration());
+		
+			if (((hora_inicio_pelicula_nueva.compareTo(hora_fin_pelicula_existente) < 0 ) 
+					& hora_inicio_pelicula_nueva.compareTo(hora_inicio_pelicula_existente) > 0) 
+					|| 
+					((hora_fin_pelicula_nueva.compareTo(hora_inicio_pelicula_existente) > 0 ) 
+							& hora_fin_pelicula_nueva.compareTo(hora_fin_pelicula_existente) < 0)
+				)
+			{
+					return ResponseEntity.badRequest().body("Ya hay una funcion en ese horario en esa sala");
+			}
+		}	
 		
 		Funcion funcion = new Funcion();
 		funcion.setSala(sala.get());
@@ -61,7 +84,7 @@ public class FuncionController {
 		
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion));
-	} 
+	}
 	
 //	/** Get One   **/
 	@GetMapping(value = "/{id}")
@@ -107,9 +130,8 @@ public class FuncionController {
 	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllFunciones( ) {
 
-		List<Funcion> funciones = funcionRepository.findAll();
-		
-		return ResponseEntity.ok(funciones);	
+		List<Funcion> funciones = funcionRepository.findAllAfterToday();
+		return ResponseEntity.ok(funciones);
 		}
 	
 	/** Update   **/
@@ -119,10 +141,30 @@ public class FuncionController {
 		Optional<Funcion> funcion = funcionRepository.findById(id);
 		Optional<Sala> sala = repoSala.findById(details.sala_id);
 		Optional<Pelicula> pelicula = repoPel.findById(details.pelicula_id);
+		List<Funcion> funciones = funcionRepository.findByDateAndSala(details.fechaFuncion, details.sala_id);
 
+		
 		if((!sala.isPresent()) || (!pelicula.isPresent()) || (!funcion.isPresent())) {
 			return ResponseEntity.notFound().build();
 		}
+		LocalTime hora_inicio_pelicula_nueva = details.horaFuncion;
+		LocalTime hora_fin_pelicula_nueva = hora_inicio_pelicula_nueva.plusMinutes(pelicula.get().getDuration());
+		
+		//Valido que no haya una funcion en ese horario
+		for (Funcion fun: funciones) {
+			LocalTime hora_inicio_pelicula_existente = fun.getHoraFuncion();
+			LocalTime hora_fin_pelicula_existente = hora_inicio_pelicula_existente.plusMinutes(fun.getPelicula().getDuration());
+		
+			if (((hora_inicio_pelicula_nueva.compareTo(hora_fin_pelicula_existente) < 0 ) 
+					& hora_inicio_pelicula_nueva.compareTo(hora_inicio_pelicula_existente) > 0) 
+					|| 
+					((hora_fin_pelicula_nueva.compareTo(hora_inicio_pelicula_existente) > 0 ) 
+							& hora_fin_pelicula_nueva.compareTo(hora_fin_pelicula_existente) < 0)
+				)
+			{
+					return ResponseEntity.badRequest().body("Ya hay una funcion en ese horario en esa sala");
+			}
+		}	
 		
 		funcion.get().setPelicula(pelicula.get());
 		funcion.get().setSala(sala.get());
@@ -132,7 +174,8 @@ public class FuncionController {
 		emailSenderService.sendDataModifiedFunction(id);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion.get()));
-	}
+		}
+	
 	
 	/** Delete   **/
 	@DeleteMapping(value="/{id}")
