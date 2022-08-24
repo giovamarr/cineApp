@@ -28,9 +28,11 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 	@Query("SELECT res from Reserva res where res.code=?1 and res.email=?2")
 	Optional<Reserva> getReservabyCodeandEmail(String code, String email);
 	
-	@Query("SELECT res from Reserva res JOIN res.funcion fun where fun.id=?1")
-	List<Reserva> getallbyFunction(Integer id);
+	@Query("SELECT res.id,res.code,res.email,res.fechaCompra,res.butaca from Reserva res JOIN res.funcion fun where fun.id=?1")
+	List<Object[]> getallbyFunction(Integer id);
 	
+	@Query("SELECT res from Reserva res JOIN res.funcion fun where fun.id=?1")
+	List<Reserva> getallReservabyFunction(Integer id);
 	
 	@Transactional
 	@Modifying
@@ -41,5 +43,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 	@Modifying
 	@Query("delete from Reserva res where res.funcion.id =?1")
 	void deleteByFuncion(Integer id);
+
+	@Transactional
+	@Modifying
+	@Query("delete from Reserva res where res.id=?1")
+	void deletebyID(Integer id);
 	
 }
