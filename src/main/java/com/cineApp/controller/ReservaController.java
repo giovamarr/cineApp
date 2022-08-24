@@ -110,8 +110,7 @@ public class ReservaController {
 	@GetMapping(value = "/all/{id}")
 	public ResponseEntity<?> getAllReservasbyFunction(@PathVariable  Integer id ) {
 
-		System.out.println("Reservas");
-		List<Reserva> reservas = reservaRepository.getallbyFunction(id);
+		List<Object[]> reservas = reservaRepository.getallbyFunction(id);
 
 		return ResponseEntity.ok(reservas);	
 		}
@@ -150,14 +149,16 @@ public class ReservaController {
 	} 
 	
 	@DeleteMapping(value="/{id}")
-	public ResponseEntity<?>  deleteReserva(@PathVariable Integer id) {
+	public ResponseEntity<?>  deleteReservabyid(@PathVariable Integer id) {
 		Optional<Reserva> reserva=reservaRepository.findById(id);
 		if(!reserva.isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
-		reservaRepository.deleteById(id);
+		reservaRepository.deletebyID(id);
 		emailSenderService.sendCancelReserva(reserva.get());
-		return ResponseEntity.ok().build();
+		Map<String,Object> msg= new HashMap<String, Object>();
+		msg.put("message", "Entrada borrada con exito");
+		return ResponseEntity.status(HttpStatus.OK).body(msg);
 	}
 	
 	/** Listado ventas por pelicula   **/

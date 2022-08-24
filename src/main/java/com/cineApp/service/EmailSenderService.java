@@ -60,7 +60,7 @@ public class EmailSenderService {
 	}
 	
 	public void sendCancelFunction(Integer id) {
-		List<Reserva> reservas =reservaRepository.getallbyFunction(id);
+		List<Reserva> reservas =reservaRepository.getallReservabyFunction(id);
 		
 		for(Reserva reserva:reservas) {
 			SimpleMailMessage message =new SimpleMailMessage();
@@ -80,7 +80,7 @@ public class EmailSenderService {
 	
 	public void sendDataModifiedFunction(Integer id) {
 		
-		List<Reserva> reservas =reservaRepository.getallbyFunction(id);
+		List<Reserva> reservas =reservaRepository.getallReservabyFunction(id);
 		
 		for(Reserva reserva:reservas) {
 			SimpleMailMessage message =new SimpleMailMessage();
