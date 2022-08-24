@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cineApp.model.Funcion;
 import com.cineApp.model.Reserva;
 import com.cineApp.model.User;
+import com.cineApp.exception.ApiRequestException;
 import com.cineApp.model.Butaca;
 import com.cineApp.repository.FuncionRepository;
 import com.cineApp.repository.ReservaRepository;
@@ -54,7 +55,7 @@ public class ReservaController {
 	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addReserva(@RequestBody ReservaSchema details) {		
-		
+		try {
 		Optional<Funcion> funcion = funcionRepository.findById(details.funcion_id);
 		Optional<Butaca> butaca = butacaRepository.findById(details.butaca_id);
 		if(!paymentService.searchCreditCard(details.number, details.cvc, details.name, details.expiry)) {
@@ -78,14 +79,18 @@ public class ReservaController {
 		emailSenderService.sendEmailNewReservation(details.email,reserva);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(reservaRepository.save(reserva));
-	} 
+	} catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
+	}
+
+}
 	
 
 	
 	/** Get One   **/
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdReserva(@PathVariable  Integer id) {
-
+		try{
 		Optional<Reserva> reserva = reservaRepository.findById(id);
 		
 		if(!reserva.isPresent()) {
@@ -93,7 +98,11 @@ public class ReservaController {
 					}
 
 		return ResponseEntity.ok(reserva);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	
 	/** Get All   **/
@@ -135,7 +144,7 @@ public class ReservaController {
 	/** Delete   **/
 	@DeleteMapping(value = "/")
 	public ResponseEntity<?> deleteReserva(@RequestBody CancelReservaSchema details) {		
-		
+		try {
 		Optional<Reserva> reserva = reservaRepository.getReservabyCodeandEmail(details.code,details.email);
 		if(!reserva.isPresent()) {
 			Map<String,Object> msg= new HashMap<String, Object>();
@@ -146,10 +155,15 @@ public class ReservaController {
 		Map<String,Object> msg= new HashMap<String, Object>();
 		msg.put("message", "Entrada borrada con exito");
 		return ResponseEntity.status(HttpStatus.OK).body(msg);
-	} 
+	} catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
+	}
+
+}
 	
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteReservabyid(@PathVariable Integer id) {
+	try {
 		Optional<Reserva> reserva=reservaRepository.findById(id);
 		if(!reserva.isPresent()) {
 			return ResponseEntity.notFound().build();
@@ -159,21 +173,35 @@ public class ReservaController {
 		Map<String,Object> msg= new HashMap<String, Object>();
 		msg.put("message", "Entrada borrada con exito");
 		return ResponseEntity.status(HttpStatus.OK).body(msg);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	/** Listado ventas por pelicula   **/
 	@GetMapping(value = "/listados/pelicula")
 	public ResponseEntity<?>  getListadoVentasPelicula() {
+		try {
 		List<Object[]> listado = reservaRepository.listadoVentasPelicula();
 		return ResponseEntity.ok(listado);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	/** Listado ventas por pelicula   **/
 	@GetMapping(value = "/listados/funcion")
 	public ResponseEntity<?>  getListadoVentasFuncion() {
+		try {
 		List<Object[]> listado = reservaRepository.listadoVentasFuncion();
 		return ResponseEntity.ok(listado);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	
 }

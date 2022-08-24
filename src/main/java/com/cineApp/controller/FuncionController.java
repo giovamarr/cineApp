@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cineApp.schema.FuncionSchema;
 import com.cineApp.service.EmailSenderService;
+import com.cineApp.exception.ApiRequestException;
 import com.cineApp.model.Funcion;
 import com.cineApp.model.Pelicula;
 import com.cineApp.model.Sala;
@@ -46,7 +47,7 @@ public class FuncionController {
 	/** Add   **/
 	@PostMapping(value = "/")
 	public ResponseEntity<?> addFuncion(@RequestBody FuncionSchema details) {		
-		
+		try {
 		Optional<Sala> sala = repoSala.findById(details.sala_id);
 		Optional<Pelicula> pelicula = repoPel.findById(details.pelicula_id);
 		List<Funcion> funciones = funcionRepository.findByDateAndSala(details.fechaFuncion, details.sala_id);
@@ -84,24 +85,32 @@ public class FuncionController {
 		
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion));
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 //	/** Get One   **/
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
-		
+		try {
 		Optional<Funcion> funcion = funcionRepository.findById(id);
 		if(!funcion.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}		
 
 		return ResponseEntity.ok(funcion);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	/** Get Dates by Movie Id   **/
 	@GetMapping(value = "/byMovie/{id}")
 	public ResponseEntity<?>  getByIdMovie(@PathVariable  Integer id) {
-
+		try {
 		List<LocalDate> fechasFunciones= funcionRepository.findByMovieId(id);
 		
 //		Sin la validacion manejo mejor en los dropdown list dinamicos de react
@@ -110,12 +119,16 @@ public class FuncionController {
 //		}
 		
 		return ResponseEntity.ok(fechasFunciones);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	/** Get Dates by Movie Id   **/
 	@GetMapping(value = "/byMovie/{id}/{fechaFuncion}")
 	public ResponseEntity<?>  getByIdMovie(@PathVariable  Integer id, @PathVariable String fechaFuncion) {
-
+		try {
 		LocalDate localDate = LocalDate.parse(fechaFuncion);
 		List<Funcion> funciones= funcionRepository.findByMovieIdAndDate(id, localDate);
 		
@@ -124,20 +137,28 @@ public class FuncionController {
 //			return ResponseEntity.ok("No hay fecha disponible");
 //		}
 		return ResponseEntity.ok(funciones);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	/** Get All   **/
 	@GetMapping(value = "/")
 	public ResponseEntity<?> getAllFunciones( ) {
-
+		try {
 		List<Funcion> funciones = funcionRepository.findAllAfterToday();
 		return ResponseEntity.ok(funciones);
+		}catch(Exception e){
+			throw new ApiRequestException("Ha ocurrido un error", e);
 		}
+	
+	}
 	
 	/** Update   **/
 	@PutMapping(value="/{id}")
 	public ResponseEntity<?>  updateFuncion(@RequestBody FuncionSchema details,@PathVariable Integer id) {
-
+		try {
 		Optional<Funcion> funcion = funcionRepository.findById(id);
 		Optional<Sala> sala = repoSala.findById(details.sala_id);
 		Optional<Pelicula> pelicula = repoPel.findById(details.pelicula_id);
@@ -174,13 +195,17 @@ public class FuncionController {
 		emailSenderService.sendDataModifiedFunction(id);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(funcionRepository.save(funcion.get()));
+		}catch(Exception e){
+			throw new ApiRequestException("Ha ocurrido un error", e);
 		}
+	
+	}
 	
 	
 	/** Delete   **/
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteFuncion(@PathVariable Integer id) {
-		
+		try {
 		if(!funcionRepository.findById(id).isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
@@ -189,5 +214,9 @@ public class FuncionController {
 		emailSenderService.sendCancelFunction(id);
 						
 		return ResponseEntity.ok().build();
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 }

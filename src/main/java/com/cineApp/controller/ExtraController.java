@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cineApp.exception.ApiRequestException;
 import com.cineApp.schema.ContactSchema;
 import com.cineApp.service.EmailSenderService;
 
@@ -22,11 +24,16 @@ public class ExtraController {
 	private EmailSenderService emailSenderService;
 	@PostMapping(value = "/contact")
 	public ResponseEntity<?> sendContactMsg(@RequestBody ContactSchema details) {	
+	try {
 		emailSenderService.sendEmailContactMsg(details.name,details.email,details.subject,details.message);
 		
 	       Map<String, Object> map = new HashMap<String, Object>();
            map.put("message", "Mensaje de contacto enviado con exito");
 		return ResponseEntity.status(HttpStatus.CREATED).body(map);
-	} 
+	} catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
+	}
+
+}
 
 }

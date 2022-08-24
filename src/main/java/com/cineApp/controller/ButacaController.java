@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cineApp.exception.ApiRequestException;
 import com.cineApp.model.Butaca;
 import com.cineApp.model.Sala;
 import com.cineApp.repository.ButacaRepository;
@@ -33,7 +34,8 @@ public class ButacaController {
 	private SalaRepository salaRepository;
 	
 	@PostMapping(value = "/")
-	public ResponseEntity<?> addButaca(@RequestBody  ButacaSchema details) {		
+	public ResponseEntity<?> addButaca(@RequestBody  ButacaSchema details) {	
+		try {
 		Optional<Sala> sala = salaRepository.findById(details.sala_id);
 		
 		if((!sala.isPresent())) {
@@ -49,12 +51,16 @@ public class ButacaController {
 		
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca));
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?>  getByIdButaca(@PathVariable  Integer id) {
-
+		try {
 		Optional<Butaca> butaca = repo.findById(id);
 		
 		if(!butaca.isPresent()) {
@@ -62,19 +68,27 @@ public class ButacaController {
 					}
 
 		return ResponseEntity.ok(butaca);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	@GetMapping(value = "/byFuncion/{id}")
 	public ResponseEntity<?>  getByIdFuncion(@PathVariable  Integer id) {
-
+		try {
 		List<Butaca> butacas = repo.findByFuncionId(id);
 
 		return ResponseEntity.ok(butacas);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 
 	@PutMapping(value="/")
 	public ResponseEntity<?>  updateButaca(@RequestBody  Butaca details) {
-
+		try {
 		Optional<Butaca> butaca = repo.findById(details.getId());
 		
 		if(!butaca.isPresent()) {
@@ -83,17 +97,25 @@ public class ButacaController {
 		
 		butaca.get().setState(details.isState());
 		return ResponseEntity.status(HttpStatus.CREATED).body(repo.save(butaca.get()));
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	@DeleteMapping(value="/{id}")
 	public ResponseEntity<?>  deleteButaca(@PathVariable Integer id) {
-		
+		try {
 		if(!repo.findById(id).isPresent()) {
 			return ResponseEntity.notFound().build();
 					}
 		repo.deleteById(id);
 				
 		return ResponseEntity.ok().build();
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 }

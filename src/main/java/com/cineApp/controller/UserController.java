@@ -50,7 +50,7 @@ public class UserController {
 	
 	@PostMapping(value ="/login")
 	public ResponseEntity<?> findByEmailAndPassword(@RequestBody  User us) {
-
+		try {
 		User user = repo.findByEmailAndPassword(us.getEmail(),us.getPassword());
 	
 		if(user==null) {
@@ -61,7 +61,11 @@ public class UserController {
 		map.put("email", user.getEmail());;
 		System.out.print(map);
         return new ResponseEntity<Object>(map,HttpStatus.OK);
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
 	}
+
+}
 	
 	
 	@GetMapping(value = "/list")
