@@ -37,4 +37,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 	@Query("delete from Reserva res where res.code=?1 and res.email=?2")
 	void deleteReserva(String code,String email);
 	
+	@Transactional
+	@Modifying
+	@Query("delete from Reserva res where res.funcion.id =?1")
+	void deleteByFuncion(Integer id);
+	
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cineApp.exception.ApiRequestException;
 import com.cineApp.model.User;
 import com.cineApp.repository.UserRepository;
 
@@ -28,10 +29,16 @@ public class UserController {
 	
 	@PostMapping(value = "/register")
 	public String register(@RequestBody  User user) {
-		System.out.print(user);
+		try {
+			System.out.print(user);
 
-		repo.save(user);
-		return "StatusCode: 200";
+			repo.save(user);
+			return "StatusCode: 200";
+		}
+		catch(Exception e){
+			throw new ApiRequestException("Ha ocurrido un error", e);
+		}
+	
 	}
 	
 	/*@PostMapping(value ="/login")
@@ -52,24 +59,30 @@ public class UserController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fullname", user.getFirstName()+" "+user.getLastName()) ;;
 		map.put("email", user.getEmail());;
-
+		System.out.print(map);
         return new ResponseEntity<Object>(map,HttpStatus.OK);
 	}
 	
 	
 	@GetMapping(value = "/list")
-	public String listUsers() {
-	    List<User> listUsers = repo.findAll();
-	    System.out.print(listUsers);
-	    return "users";
+	public List<User> listUsers() {
+		try {
+			List<User> listUsers = repo.findAll();
+			return listUsers;
+		}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
+	}
 	}
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<?> getAllPelicula( ) {
-
+		try {
 		List<User> pelis = repo.findAll();
 
 		return ResponseEntity.ok(pelis);	
+	}catch(Exception e){
+		throw new ApiRequestException("Ha ocurrido un error", e);
+	}
 		}
 	
 	

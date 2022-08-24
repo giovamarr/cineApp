@@ -20,9 +20,11 @@ public interface FuncionRepository extends JpaRepository<Funcion, Integer> {
 	List<Funcion> findByMovieIdAndDate(Integer pelicula_id, LocalDate fechaFuncion);
 	
 	@Query("SELECT fun from Funcion fun where fun.fechaFuncion=?1 and fun.sala.id=?2")
-	List<Funcion> findByDateAndSala(LocalDate fechaFuncion, int sala_id);
+	List<Funcion> findByDateAndSala(LocalDate fechaFuncion, Integer sala_id);
 	
 	@Query("SELECT fun from Funcion fun where fun.fechaFuncion >= DATE(NOW())")
 	List<Funcion> findAllAfterToday();
 
+	@Query("SELECT fun from Funcion fun where fun.fechaFuncion >= DATE(NOW()) and fun.sala.id=?1")
+	List<Funcion> findBySalaAfterToday(Integer sala_id);
 }

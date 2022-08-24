@@ -100,4 +100,28 @@ public class EmailSenderService {
 		
 	}
 	
+	
+	public void sendDataDeletedFunction(Integer id) {
+		
+		List<Reserva> reservas =reservaRepository.getallbyFunction(id);
+		
+		for(Reserva reserva:reservas) {
+			SimpleMailMessage message =new SimpleMailMessage();
+			message.setFrom("cinejava99@gmail.com");			
+			message.setTo(reserva.getEmail());		
+			DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String date = reserva.getFuncion().getFechaFuncion().format(formatters);
+			String msg="Disculpe las molestias, se ha cancelado la funcion por mantenimiento.\n"+"Los datos son los siguientes:\n"+
+			"Pelicula: "+reserva.getFuncion().getPelicula().getName()+"\n"+
+			"Fecha: "+date+ " a las "+reserva.getFuncion().getHoraFuncion()+"\n"+
+			"Sala: "+reserva.getFuncion().getSala().getName()+"\n"+
+			"Butaca: "+"Fila "+reserva.getButaca().getPosition_y()+" Columna "+reserva.getButaca().getPosition_x()+"\n"
+			+"Disculpe las molestias.";
+			message.setText(msg);		
+			mailSender.send(message);					
+		}		
+		
+	}
+	
+	
 }
