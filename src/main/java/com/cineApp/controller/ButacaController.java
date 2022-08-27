@@ -1,6 +1,8 @@
 package com.cineApp.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,8 +112,10 @@ public class ButacaController {
 			return ResponseEntity.notFound().build();
 					}
 		repo.deleteById(id);
-				
-		return ResponseEntity.ok().build();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("msg", "Butaca borrada correctamente");
+
+        return new ResponseEntity<Object>(map,HttpStatus.OK);
 	}catch(Exception e){
 		throw new ApiRequestException("Ha ocurrido un error", e);
 	}

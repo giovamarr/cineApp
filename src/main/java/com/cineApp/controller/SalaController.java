@@ -202,8 +202,10 @@ public class SalaController {
 			return ResponseEntity.notFound().build();
 					}
 		repo.deleteById(id);
-				
-		return ResponseEntity.ok().build();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("msg", "Sala borrada correctamente");
+
+        return new ResponseEntity<Object>(map,HttpStatus.OK);
 	}	catch(Exception e){
 		throw new ApiRequestException("Ha ocurrido un error", e);
 	}}
